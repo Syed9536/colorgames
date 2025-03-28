@@ -1,96 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard - Color Game</title>
+    <title>Register - Color Game</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Dashboard-Specific Styles */
-        .dashboard-container {
-            padding: 20px;
-            max-width: 1000px;
-            margin: auto;
-        }
-        .user-card {
-            background: #fff;
+        /* Registration Page Styles */
+        .register-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+        }
+        .form-group {
             margin-bottom: 20px;
         }
-        .recent-bets table {
+        input[type="text"], 
+        input[type="password"] {
             width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
             padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .success-msg {
+            color: green;
+            margin: 10px 0;
+        }
+        .error-msg {
+            color: red;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Header -->
-        <div class="user-card">
-            <h1>Welcome, <span id="username">Guest</span>!</h1>
-            <p>Balance: ₹<span id="balance">0</span></p>
-            <button onclick="logout()">Logout</button>
-            <a href="bet.html"><button>Place New Bet</button></a>
-        </div>
+    <div class="register-container">
+        <h1>Create Account</h1>
+        <div id="message" class="message"></div>
 
-        <!-- Recent Bets -->
-        <div class="recent-bets">
-            <h2>Recent Bets</h2>
-            <table id="betsTable">
-                <thead>
-                    <tr>
-                        <th>Color</th>
-                        <th>Amount</th>
-                        <th>Result</th>
-                        <th>Time</th>
-                    </tr>
-                </thead>
-                <tbody id="betsBody">
-                    <!-- Bets will load here -->
-                </tbody>
-            </table>
-            <p id="noBets">No bets placed yet.</p>
-        </div>
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+
+            <button type="button" onclick="register()" class="register-btn">Register</button>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+        <p><a href="index.html">← Back to Home</a></p>
     </div>
 
     <script>
-        // Check if user is logged in
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
-            window.location.href = 'login.html'; // Redirect to login
-        }
+        // Registration Function
+        function register() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageEl = document.getElementById('message');
 
-        // Load User Data
-        document.getElementById('username').textContent = currentUser.username;
-        document.getElementById('balance').textContent = currentUser.balance || 0;
+            // Reset message
+            messageEl.className = '';
+            messageEl.textContent = '';
 
-        // Load Recent Bets from localStorage
-        const bets = JSON.parse(localStorage.getItem('bets')) || [];
-        const betsBody = document.getElementById('betsBody');
-        const noBetsMsg = document.getElementById('noBets');
+            // Basic Validation
+            if(password !== confirmPassword) {
+                messageEl.className = 'error-msg';
+                messageEl.textContent = 'Passwords do not match!';
+                return;
+            }
 
-        if (bets.length > 0) {
-            noBetsMsg.style.display = 'none';
-            betsBody.innerHTML = bets.filter(bet => bet.user === currentUser.username)
-                .map(bet => 
-                    <tr>
-                        <td>${bet.color}</td>
-                        <td>₹${bet.amount}</td>
-                        <td>${bet.result || 'Pending'}</td>
-                        <td>${new Date(bet.timestamp).toLocaleString()}</td>
-                    </tr>
-                ).join('');
-        }
+            // Check existing users
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userExists = users.some(u => u.username === username);
 
-        // Logout Function
-        function logout() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
+            if(userExists) {
+                messageEl.className = 'error-msg';
+                messageEl.textContent = 'Username already taken!';
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                username: username,
+                password: password, // Note: Real apps mein password encrypt karo
+                balance: 1000, // Starting balance
+                joined: Date.now()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Success message
+            messageEl.className = 'success-msg';
+            messageEl.textContent = 'Registration successful! Redirecting...';
+
+            // Auto-login aur redirect
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            setTimeout(() => window.location.href = "dashboard.html", 1500);
         }
     </script>
 </body>
