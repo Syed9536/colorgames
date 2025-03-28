@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Prediction Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom Homepage Styles */
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #6b46c1, #4299e1);
+            color: white;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .cta-buttons {
+            margin: 30px 0;
+        }
+        .cta-buttons a {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-btn {
+            background: #48bb78;
+            color: white;
+        }
+        .register-btn {
+            background: #4299e1;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>Color Prediction Game</h1>
+        <p>Predict the color, place your bet, and win big!</p>
+        
+        <div class="cta-buttons">
+            <!-- Show Dashboard if logged in -->
+            <div id="loggedInSection" style="display: none;">
+                <p>Welcome back, <span id="homeUsername"></span>!</p>
+                <a href="dashboard.html" class="login-btn">Go to Dashboard</a>
+            </div>
+
+            <!-- Show Login/Register if guest -->
+            <div id="guestSection">
+                <a href="login.html" class="login-btn">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+        <div class="feature-card">
+            <h3>🎮 Play Now</h3>
+            <p>Predict Red or Green to multiply your balance!</p>
+        </div>
+        <div class="feature-card">
+            <h3>📊 Live Results</h3>
+            <p>Track real-time game history and trends.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🏆 Leaderboard</h3>
+            <p>Compete with top players worldwide.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const guestSection = document.getElementById('guestSection');
+        const loggedInSection = document.getElementById('loggedInSection');
+
+        if (currentUser) {
+            guestSection.style.display = 'none';
+            loggedInSection.style.display = 'block';
+            document.getElementById('homeUsername').textContent = currentUser.username;
+        }
+    </script>
+</body>
+</html>

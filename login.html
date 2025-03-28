@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Color Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Login Page Specific Styles */
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"], 
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .error-msg {
+            color: red;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>User Login</h1>
+        <div id="errorMessage" class="error-msg"></div>
+        
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <button type="button" onclick="login()" class="login-btn">Login</button>
+        </form>
+
+        <p>New user? <a href="register.html">Register here</a></p>
+        <p><a href="index.html">← Back to Home</a></p>
+    </div>
+
+    <script>
+        // Login Function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('errorMessage');
+            
+            // Get registered users
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if(user) {
+                // Save current user session
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = "dashboard.html";
+            } else {
+                errorEl.textContent = "Invalid username or password!";
+            }
+        }
+
+        // Auto-redirect if already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if(currentUser) window.location.href = "dashboard.html";
+    </script>
+</body>
+</html>

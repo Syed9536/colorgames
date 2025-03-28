@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Color Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dashboard-Specific Styles */
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .user-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .recent-bets table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="user-card">
+            <h1>Welcome, <span id="username">Guest</span>!</h1>
+            <p>Balance: ₹<span id="balance">0</span></p>
+            <button onclick="logout()">Logout</button>
+            <a href="bet.html"><button>Place New Bet</button></a>
+        </div>
+
+        <!-- Recent Bets -->
+        <div class="recent-bets">
+            <h2>Recent Bets</h2>
+            <table id="betsTable">
+                <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>Amount</th>
+                        <th>Result</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="betsBody">
+                    <!-- Bets will load here -->
+                </tbody>
+            </table>
+            <p id="noBets">No bets placed yet.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html'; // Redirect to login
+        }
+
+        // Load User Data
+        document.getElementById('username').textContent = currentUser.username;
+        document.getElementById('balance').textContent = currentUser.balance || 0;
+
+        // Load Recent Bets from localStorage
+        const bets = JSON.parse(localStorage.getItem('bets')) || [];
+        const betsBody = document.getElementById('betsBody');
+        const noBetsMsg = document.getElementById('noBets');
+
+        if (bets.length > 0) {
+            noBetsMsg.style.display = 'none';
+            betsBody.innerHTML = bets.filter(bet => bet.user === currentUser.username)
+                .map(bet => 
+                    <tr>
+                        <td>${bet.color}</td>
+                        <td>₹${bet.amount}</td>
+                        <td>${bet.result || 'Pending'}</td>
+                        <td>${new Date(bet.timestamp).toLocaleString()}</td>
+                    </tr>
+                ).join('');
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!-- BEFORE (PHP Code in HTML) -->
+<php
+include 'db.php';
+session_start();
+...
+</form>
+
+<!-- AFTER (Pure HTML/JS) -->
+<form id="betForm">
+  <label>Choose Color</label>
+  <select name="color" id="color">
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+  </select><br>
+  <label>Bet Amount:</label>
+  <input type="number" id="amount" required><br>
+  <button type="button" onclick="placeBet()">Place Bet</button>
+</form>
+
+<script>
+  // Use localStorage as a fake "database"
+  function placeBet() {
+    const color = document.getElementById('color').value;
+    const amount = document.getElementById('amount').value;
+    
+    // Save to localStorage
+    const bets = JSON.parse(localStorage.getItem('bets')) || [];
+    bets.push({ color, amount, timestamp: Date.now() });
+    localStorage.setItem('bets', JSON.stringify(bets));
+    
+    alert('Bet placed!');
+  }
+</script>

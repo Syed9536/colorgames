@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Color Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Admin-specific CSS */
+        .admin-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Admin Dashboard</h1>
+        
+        <!-- User Activity Section -->
+        <h2>User Activity</h2>
+        <table id="userActivity">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Last Login</th>
+                    <th>Total Bets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated via JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Recent Bets Section -->
+        <h2>Recent Bets</h2>
+        <table id="recentBets">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Color</th>
+                    <th>Amount</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated via JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Clear Data Button (Optional) -->
+        <button onclick="clearAllData()">Clear All Data</button>
+    </div>
+
+    <script>
+        // Sample Data (Replace with localStorage logic)
+        let users = JSON.parse(localStorage.getItem('users')) ||
